@@ -1,0 +1,21 @@
+from flask import Flask, request
+import os
+
+app = Flask(__name__)
+UPLOAD_FOLDER = 'uploads'
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+@app.route('/')
+def home():
+    return 'Server is online!'
+
+@app.route('/upload', methods=['POST'])
+def upload_image():
+    if 'image' not in request.files:
+        return 'No image part', 400
+    image = request.files['image']
+    image.save(os.path.join(UPLOAD_FOLDER, 'latest.jpg'))
+    return 'Image received successfully', 200
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
